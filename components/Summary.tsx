@@ -29,19 +29,19 @@ const formatValue = (value: number) => {
 const Summary: React.FC<SummaryProps> = ({ data, onDataChange, netCharges, netPl, inrRate }) => {
     
     const summaryItems = [
-        { label: 'Capital', usd: data.capital, inr: data.capital * inrRate, editable: true, key: 'capital' as const, display: 'currency', color: 'text-primary' },
-        { label: 'Total Trading Days', usd: data.totalTradingDays, editable: true, key: 'totalTradingDays' as const, display: 'number', color: 'text-primary' },
-        { label: 'Qty / Lot', usd: data.qtyPerLot, editable: true, key: 'qtyPerLot' as const, display: 'number', color: 'text-primary' },
-        { label: 'Working Capital', usd: data.workingCapital, inr: data.workingCapital * inrRate, editable: true, key: 'workingCapital' as const, display: 'currency', color: 'text-primary' },
+        { label: 'Capital', usd: data.capital, inr: data.capital * inrRate, editable: true, key: 'capital' as const, display: 'currency', color: 'text-text-secondary' },
+        { label: 'Total Trading Days', usd: data.totalTradingDays, editable: true, key: 'totalTradingDays' as const, display: 'number', color: 'text-text-secondary' },
+        { label: 'Qty / Lot', usd: data.qtyPerLot, editable: true, key: 'qtyPerLot' as const, display: 'number', color: 'text-text-secondary' },
+        { label: 'Working Capital', usd: data.workingCapital, inr: data.workingCapital * inrRate, editable: true, key: 'workingCapital' as const, display: 'currency', color: 'text-text-secondary' },
         { label: 'Avg. Asset Movement', usd: data.avgAssetMovement, editable: true, key: 'avgAssetMovement' as const, display: 'percent', color: 'text-tertiary' },
-        { label: 'Max Trade PerDay', usd: data.maxTradePerDay, editable: true, key: 'maxTradePerDay' as const, display: 'number', color: 'text-primary' },
+        { label: 'Max Trade PerDay', usd: data.maxTradePerDay, editable: true, key: 'maxTradePerDay' as const, display: 'number', color: 'text-text-secondary' },
         { label: 'SL PerTrade', usd: data.slPerTrade, inr: data.slPerTrade * inrRate, editable: true, key: 'slPerTrade' as const, display: 'currency', color: 'text-danger' },
         { label: 'TP PerTrade', usd: data.tpPerTrade, inr: data.tpPerTrade * inrRate, editable: true, key: 'tpPerTrade' as const, display: 'currency', color: 'text-success' },
-        { label: 'P&L Ratio', usd: data.plRatio, editable: true, key: 'plRatio' as const, display: 'text', color: 'text-primary' },
+        { label: 'P&L Ratio', usd: data.plRatio, editable: true, key: 'plRatio' as const, display: 'text', color: 'text-text-secondary' },
     ];
     
     return (
-        <div className="bg-background-secondary border border-border text-xs sm:text-sm rounded-lg shadow-lg shadow-shadow">
+        <div className="bg-background-secondary border border-border text-sm sm:text-base rounded-lg shadow-lg shadow-shadow">
             <div className="grid grid-cols-3 bg-surface font-bold rounded-t-lg">
                 <div className="col-span-1 p-1 sm:p-1.5"></div>
                 <div className="col-span-1 p-1 sm:p-1.5 text-center text-text-secondary">USD</div>
@@ -70,7 +70,7 @@ const Summary: React.FC<SummaryProps> = ({ data, onDataChange, netCharges, netPl
                                                         type="number"
                                                         value={part1}
                                                         onChange={(e) => handleRatioChange(1, e.target.value)}
-                                                        className="w-12 sm:w-16 bg-transparent focus:outline-none text-right appearance-none"
+                                                        className="w-12 sm:w-16 bg-transparent focus:outline-none text-right appearance-none text-success"
                                                         style={{ MozAppearance: 'textfield' }}
                                                     />
                                                     <span className="px-1 select-none">:</span>
@@ -78,21 +78,21 @@ const Summary: React.FC<SummaryProps> = ({ data, onDataChange, netCharges, netPl
                                                         type="number"
                                                         value={part2}
                                                         onChange={(e) => handleRatioChange(2, e.target.value)}
-                                                        className="w-12 sm:w-16 bg-transparent focus:outline-none text-left appearance-none"
+                                                        className="w-12 sm:w-16 bg-transparent focus:outline-none text-left appearance-none text-danger"
                                                         style={{ MozAppearance: 'textfield' }}
                                                     />
                                                 </div>
                                             );
                                         })()
                                     ) : (
-                                        <div className="flex items-center justify-end">
+                                        <div className="flex items-center justify-end gap-x-1">
                                             {item.display === 'currency' && <span>$</span>}
                                             <input
                                                 type={isNumberInput ? "number" : "text"}
                                                 step={isNumberInput ? "0.01" : undefined}
                                                 value={item.usd}
                                                 onChange={(e) => onDataChange(item.key, isNumberInput ? parseFloat(e.target.value) || 0 : e.target.value)}
-                                                className="w-full bg-transparent focus:outline-none text-right appearance-none"
+                                                className="w-24 sm:w-32 bg-transparent focus:outline-none text-right appearance-none"
                                                 style={{MozAppearance: 'textfield'}}
                                             />
                                             {item.display === 'percent' && <span>%</span>}
@@ -108,7 +108,7 @@ const Summary: React.FC<SummaryProps> = ({ data, onDataChange, netCharges, netPl
                                     </div>
                                 )}
                             </div>
-                            <div className="col-span-1 p-1 sm:p-1.5 text-right text-secondary">
+                            <div className="col-span-1 p-1 sm:p-1.5 text-right text-text-secondary">
                                 {hasInr ? formatCurrency(item.inr, 'INR') : ''}
                             </div>
                         </div>
@@ -116,20 +116,26 @@ const Summary: React.FC<SummaryProps> = ({ data, onDataChange, netCharges, netPl
                 })}
                 <div className="grid grid-cols-3 pt-4">
                      <div className="col-span-1 p-1 sm:p-1.5">Net Charges</div>
-                     <div className="col-span-1 p-1 sm:p-1.5 font-bold text-danger flex justify-end items-center">
-                        <span>$</span>
-                        <span className="ml-0.5">{formatValue(netCharges)}</span>
+                     <div className="col-span-1 p-1 sm:p-1.5 font-bold text-danger">
+                        <div className="flex items-center justify-end gap-x-1">
+                            <span>$</span>
+                            <span className="w-24 sm:w-32 text-right">{formatValue(netCharges)}</span>
+                        </div>
                      </div>
-                     <div className="col-span-1 p-1 sm:p-1.5 text-right text-secondary">{formatCurrency(netCharges * inrRate, 'INR')}</div>
+                     <div className="col-span-1 p-1 sm:p-1.5 text-right text-text-secondary">{formatCurrency(netCharges * inrRate, 'INR')}</div>
                 </div>
                 <div className="grid grid-cols-3">
                      <div className="col-span-1 p-1 sm:p-1.5">Net P&L</div>
-                     <div className={`col-span-1 p-1 sm:p-1.5 font-bold ${netPl >= 0 ? 'text-success' : 'text-danger'} flex justify-end items-center`}>
-                        {netPl < 0 && <span>-</span>}
-                        <span>$</span>
-                        <span className="ml-0.5">{formatValue(Math.abs(netPl))}</span>
+                     <div className={`col-span-1 p-1 sm:p-1.5 font-bold ${netPl >= 0 ? 'text-success' : 'text-danger'}`}>
+                        <div className="flex items-center justify-end gap-x-1">
+                            <div className="flex">
+                                {netPl < 0 && <span>-</span>}
+                                <span>$</span>
+                            </div>
+                            <span className="w-24 sm:w-32 text-right">{formatValue(Math.abs(netPl))}</span>
+                        </div>
                      </div>
-                     <div className="col-span-1 p-1 sm:p-1.5 text-right text-secondary">{formatCurrency(netPl * inrRate, 'INR')}</div>
+                     <div className="col-span-1 p-1 sm:p-1.5 text-right text-text-secondary">{formatCurrency(netPl * inrRate, 'INR')}</div>
                 </div>
                 <div className="h-10"></div>
             </div>

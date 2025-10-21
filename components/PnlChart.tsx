@@ -11,7 +11,7 @@ interface PnlChartProps {
 const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
         return (
-            <div className="bg-background-quaternary border border-border rounded-md p-3 text-sm shadow-lg">
+            <div className="bg-background-quaternary border border-border rounded-md p-3 text-base shadow-lg">
                 <p className="label text-text-primary">{`Date: ${label}`}</p>
                 <p className="intro" style={{ color: payload[0].payload['P&L'] >= 0 ? 'var(--color-success)' : 'var(--color-danger)' }}>
                     {`Trade P&L: ${payload[0].payload['P&L'].toFixed(2)}`}
@@ -159,16 +159,16 @@ const PnlChart: React.FC<PnlChartProps> = ({ trades }) => {
                     <XAxis 
                         dataKey="name" 
                         stroke={axisColor}
-                        tick={{ fontSize: 12 }} 
+                        tick={{ fontSize: 14 }} 
                     />
                     <YAxis 
                         stroke={axisColor}
-                        tick={{ fontSize: 12 }} 
+                        tick={{ fontSize: 14 }} 
                         tickFormatter={(value) => `$${value.toFixed(0)}`} 
                         domain={['auto', 'auto']}
                     />
                     <Tooltip content={<CustomTooltip />} />
-                    <Legend wrapperStyle={{ fontSize: 12, paddingTop: '20px', color: axisColor }} />
+                    <Legend wrapperStyle={{ fontSize: 14, paddingTop: '20px', color: axisColor }} />
                     <Area 
                         type="monotone" 
                         dataKey="Cumulative P&L" 
@@ -201,14 +201,14 @@ const PnlChart: React.FC<PnlChartProps> = ({ trades }) => {
         <div className="bg-background-secondary border border-border p-2 sm:p-4 h-full min-h-[280px] sm:min-h-[300px] flex flex-col rounded-lg shadow-lg shadow-shadow">
              <div className="flex flex-wrap justify-center sm:justify-between items-center mb-4 gap-2 sm:gap-4">
                 <div className="flex items-baseline gap-x-4">
-                    <h3 className="text-lg font-bold text-text-secondary">Cumulative P&L</h3>
+                    <h3 className="text-xl font-bold text-text-secondary">Cumulative P&L</h3>
                     <div className="px-2">
-                        <span className={`text-lg font-bold btc-price-text ${priceAnimationClass}`}>
+                        <span className={`text-xl font-bold btc-price-text ${priceAnimationClass}`}>
                             {btcPrice ? `$${btcPrice}` : 'Loading...'}
                         </span>
                     </div>
                 </div>
-                <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-sm">
+                <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-base">
                     <div className="flex items-center gap-2">
                         <label htmlFor="from" className="text-text-secondary">From:</label>
                         <div className="flex items-center bg-background-quaternary border border-border rounded-md">
