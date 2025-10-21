@@ -47,9 +47,9 @@ const Header: React.FC<HeaderProps> = ({ finalPl, inrRate, onExport, onImport })
             </div>
              <div className="hidden lg:flex col-span-2 bg-border self-stretch items-center justify-center border-r border-border">
                 <div className="text-lg font-bold text-center font-orbitron tracking-widest uppercase">
-                    <span className="text-[#eaa13d] [text-shadow:0_0_8px_#eaa13d]">Lock</span>
+                    <span className="text-[#12acff] [text-shadow:0_0_8px_#12acff]">Lock</span>
                     <span className="text-text-primary"> </span>
-                    <span className="text-[#3dead7] [text-shadow:0_0_8px_#3dead7]">Head ;</span>
+                    <span className="text-[#12acff] [text-shadow:0_0_8px_#12acff]">Head ;</span>
                 </div>
             </div>
             {/* Decreased column span to allocate more space to the P&L section */}

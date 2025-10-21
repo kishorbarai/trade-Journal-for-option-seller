@@ -22,7 +22,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         });
         
         // Special handling for calendar picker icon based on theme
-        const isDark = theme.name.toLowerCase().includes('night') || theme.name.toLowerCase().includes('dracula') || theme.name.toLowerCase().includes('eyelock');
+        const isDark = theme.name === 'EyeLock' || theme.name === 'Ubuntu' || theme.name === 'Ubuntu Yaru Dark';
         root.style.setProperty('--webkit-calendar-picker-indicator-filter', isDark ? 'invert(1)' : 'none');
 
     }, [theme]);

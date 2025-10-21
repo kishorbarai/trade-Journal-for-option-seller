@@ -5,33 +5,6 @@ export interface Theme {
   };
 }
 
-const tokyoNight: Theme = {
-  name: 'Tokyo Night',
-  colors: {
-    '--color-background': '#1a1b2e',
-    '--color-background-secondary': '#16161e',
-    '--color-background-tertiary': '#24283b',
-    '--color-background-quaternary': '#1f2335',
-    '--color-surface': '#292e42',
-    '--color-surface-hover': 'rgba(65, 72, 104, 0.5)',
-    '--color-border': '#414868',
-    '--color-text-primary': '#c0caf5',
-    '--color-text-secondary': '#a9b1d6',
-    '--color-text-inverted': '#1a1b26',
-    '--color-primary': '#7dcfff',
-    '--color-secondary': '#ff9e64',
-    '--color-tertiary': '#e0af68',
-    '--color-success': '#9ece6a',
-    '--color-danger': '#f7768e',
-    '--color-shadow': 'rgba(0, 0, 0, 0.2)',
-    '--color-success-glow': 'rgba(158, 206, 106, 0.6)',
-    '--color-danger-glow': 'rgba(247, 118, 142, 0.6)',
-    '--color-checkbox-bg': '#3c405c',
-    '--color-checkbox-border': '#5a6084',
-    '--color-disabled-bg': '#565f89',
-  },
-};
-
 const solarizedLight: Theme = {
   name: 'Solarized Light',
   colors: {
@@ -58,33 +31,6 @@ const solarizedLight: Theme = {
     '--color-disabled-bg': '#d3d9dd',
   },
 };
-
-const dracula: Theme = {
-    name: 'Dracula',
-    colors: {
-      '--color-background': '#282a36',
-      '--color-background-secondary': '#21222c',
-      '--color-background-tertiary': '#44475a',
-      '--color-background-quaternary': '#3a3c4a',
-      '--color-surface': '#44475a',
-      '--color-surface-hover': 'rgba(98, 114, 164, 0.5)',
-      '--color-border': '#6272a4',
-      '--color-text-primary': '#f8f8f2',
-      '--color-text-secondary': '#bd93f9',
-      '--color-text-inverted': '#282a36',
-      '--color-primary': '#8be9fd',
-      '--color-secondary': '#ffb86c',
-      '--color-tertiary': '#f1fa8c',
-      '--color-success': '#50fa7b',
-      '--color-danger': '#ff5555',
-      '--color-shadow': 'rgba(0, 0, 0, 0.3)',
-      '--color-success-glow': 'rgba(80, 250, 123, 0.5)',
-      '--color-danger-glow': 'rgba(255, 85, 85, 0.5)',
-      '--color-checkbox-bg': '#44475a',
-      '--color-checkbox-border': '#6272a4',
-      '--color-disabled-bg': '#6272a4',
-    },
-  };
 
 const eyeLock: Theme = {
   name: 'EyeLock',
@@ -113,4 +59,58 @@ const eyeLock: Theme = {
   },
 };
 
-export const themes: Theme[] = [tokyoNight, solarizedLight, dracula, eyeLock];
+const ubuntu: Theme = {
+  name: 'Ubuntu',
+  colors: {
+    '--color-background': '#2B2929',
+    '--color-background-secondary': '#211F1F',
+    '--color-background-tertiary': '#3D3B3B',
+    '--color-background-quaternary': '#4a4747',
+    '--color-surface': '#3D3B3B',
+    '--color-surface-hover': 'rgba(90, 87, 87, 0.5)',
+    '--color-border': '#535151',
+    '--color-text-primary': '#EEEEEC',
+    '--color-text-secondary': '#D3D7CF',
+    '--color-text-inverted': '#2B2929',
+    '--color-primary': '#E95420',
+    '--color-secondary': '#872175',
+    '--color-tertiary': '#f2a889',
+    '--color-success': '#87e8a4',
+    '--color-danger': '#f1706f',
+    '--color-shadow': 'rgba(0, 0, 0, 0.3)',
+    '--color-success-glow': 'rgba(135, 232, 164, 0.5)',
+    '--color-danger-glow': 'rgba(241, 112, 111, 0.5)',
+    '--color-checkbox-bg': '#4a4747',
+    '--color-checkbox-border': '#6f6c6c',
+    '--color-disabled-bg': '#535151',
+  },
+};
+
+const ubuntuYaruDark: Theme = {
+  name: 'Ubuntu Yaru Dark',
+  colors: {
+    '--color-background': '#252525',
+    '--color-background-secondary': '#1c1c1c',
+    '--color-background-tertiary': '#333333',
+    '--color-background-quaternary': '#404040',
+    '--color-surface': '#333333',
+    '--color-surface-hover': 'rgba(80, 80, 80, 0.5)',
+    '--color-border': '#4a4a4a',
+    '--color-text-primary': '#F7F7F7',
+    '--color-text-secondary': '#A9A9A9',
+    '--color-text-inverted': '#121212',
+    '--color-primary': '#E95420',
+    '--color-secondary': '#9141AC',
+    '--color-tertiary': '#F9A825',
+    '--color-success': '#73D216',
+    '--color-danger': '#EF2929',
+    '--color-shadow': 'rgba(0, 0, 0, 0.4)',
+    '--color-success-glow': 'rgba(115, 210, 22, 0.4)',
+    '--color-danger-glow': 'rgba(239, 41, 41, 0.4)',
+    '--color-checkbox-bg': '#404040',
+    '--color-checkbox-border': '#606060',
+    '--color-disabled-bg': '#555555',
+  },
+};
+
+export const themes: Theme[] = [eyeLock, ubuntu, ubuntuYaruDark, solarizedLight];
