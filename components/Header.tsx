@@ -70,15 +70,6 @@ const Header: React.FC<HeaderProps> = ({ finalPl, inrRate, onExport, onImport })
         return () => clearTimeout(timer);
     }, []);
 
-    const pnlGlowClass = finalPl !== 0 ? 'animate-pnl-glow' : '';
-
-    const pnlGlowStyle = finalPl > 0 
-        ? { '--glow-color': 'var(--color-success-glow)', '--glow-color-accent': 'var(--color-success)' } as React.CSSProperties
-        : finalPl < 0 
-        ? { '--glow-color': 'var(--color-danger-glow)', '--glow-color-accent': 'var(--color-danger)' } as React.CSSProperties
-        : {};
-
-
     return (
         <div className={`grid grid-cols-12 bg-background-tertiary border border-border min-h-16 items-center rounded-lg shadow-lg shadow-shadow ${isMounted ? 'header-fade-in' : 'opacity-0'}`}>
             <div className="col-span-3 lg:col-span-2 bg-background-quaternary flex items-center justify-center p-2 self-stretch rounded-l-lg">
@@ -91,8 +82,7 @@ const Header: React.FC<HeaderProps> = ({ finalPl, inrRate, onExport, onImport })
             {/* P&L Section: Wrapped content to apply border-radius and glow internally. */}
             <div className="col-span-9 lg:col-span-4 bg-background-tertiary flex items-center justify-center border-l border-r border-border self-stretch p-1.5">
                 <div 
-                   className={`w-full h-full flex flex-wrap items-center justify-center lg:justify-start px-3 transition-shadow duration-500 rounded-[10px] ${pnlGlowClass}`}
-                   style={pnlGlowStyle}
+                   className="w-full h-full flex flex-wrap items-center justify-center lg:justify-start px-3 transition-shadow duration-500 rounded-[10px]"
                 >
                     <span className="text-text-secondary font-bold pr-3 text-2xl flex-shrink-0">Final P&L:</span>
                     <span className={`text-4xl font-bold pr-3 ${finalPl >= 0 ? 'text-success' : 'text-danger'} whitespace-nowrap`}>

@@ -100,11 +100,6 @@
         0%, 100% { text-shadow: 0 0 8px #3dead7, 0 0 2px rgba(61, 234, 215, 0.5); }
         50% { text-shadow: 0 0 16px #3dead7, 0 0 24px #8cfff8; }
       }
-
-      @keyframes pnl-glow {
-        0%, 100% { box-shadow: 0 0 15px var(--glow-color); }
-        50% { box-shadow: 0 0 25px var(--glow-color), 0 0 10px var(--glow-color-accent); }
-      }
       
       @keyframes fade-in {
         from { opacity: 0; transform: translateY(-10px); }
@@ -118,9 +113,6 @@
       .animate-glow-options {
         /* Add a slight delay to desynchronize the pulses */
         animation: glow-pulse-options 4s ease-in-out infinite 0.3s;
-      }
-      .animate-pnl-glow {
-        animation: pnl-glow 5s ease-in-out infinite;
       }
       .header-fade-in {
         animation: fade-in 0.7s ease-out forwards;
