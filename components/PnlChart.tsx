@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect, useRef } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Area } from 'recharts';
 import { format } from 'date-fns';
 import type { Trade } from '../types';
@@ -29,10 +29,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 const PnlChart: React.FC<PnlChartProps> = ({ trades }) => {
     const [dateRange, setDateRange] = useState({ from: '', to: '' });
     const [btcPrice, setBtcPrice] = useState<string | null>(null);
-    const [priceChangeStatus, setPriceChangeStatus] = useState<'up' | 'down' | null>(null);
-    const prevBtcPriceRef = useRef<number | null>(null);
-    const animationTimeoutRef = useRef<number | null>(null);
-
+    
     useEffect(() => {
         const ws = new WebSocket('wss://stream.binance.com:9443/ws/btcusdt@ticker');
 
@@ -45,24 +42,7 @@ const PnlChart: React.FC<PnlChartProps> = ({ trades }) => {
                 const data = JSON.parse(event.data);
                 if (data && data.c) {
                     const price = parseFloat(data.c);
-
-                    if (prevBtcPriceRef.current !== null) {
-                        if (price > prevBtcPriceRef.current) {
-                            setPriceChangeStatus('up');
-                        } else if (price < prevBtcPriceRef.current) {
-                            setPriceChangeStatus('down');
-                        }
-                    }
-
                     setBtcPrice(price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
-                    prevBtcPriceRef.current = price;
-
-                    if (animationTimeoutRef.current) {
-                        clearTimeout(animationTimeoutRef.current);
-                    }
-                    animationTimeoutRef.current = window.setTimeout(() => {
-                        setPriceChangeStatus(null);
-                    }, 1000); // Animation duration is 1s
                 }
             } catch (error) {
                 console.error('Error parsing WebSocket message:', error);
@@ -81,9 +61,6 @@ const PnlChart: React.FC<PnlChartProps> = ({ trades }) => {
         return () => {
             if (ws.readyState === WebSocket.OPEN) {
                 ws.close();
-            }
-            if (animationTimeoutRef.current) {
-                clearTimeout(animationTimeoutRef.current);
             }
         };
     }, []);
@@ -193,17 +170,13 @@ const PnlChart: React.FC<PnlChartProps> = ({ trades }) => {
         )
     }
 
-    const priceAnimationClass = 
-        priceChangeStatus === 'up' ? 'animate-price-up' :
-        priceChangeStatus === 'down' ? 'animate-price-down' : '';
-
     return (
         <div className="bg-background-secondary border border-border p-2 sm:p-4 h-full min-h-[280px] sm:min-h-[300px] flex flex-col rounded-lg shadow-lg shadow-shadow">
              <div className="flex flex-wrap justify-center sm:justify-between items-center mb-4 gap-2 sm:gap-4">
                 <div className="flex items-baseline gap-x-4">
                     <h3 className="text-xl font-bold text-text-secondary">Cumulative P&L</h3>
                     <div className="px-2">
-                        <span className={`text-xl font-bold btc-price-text ${priceAnimationClass}`}>
+                        <span className="text-xl font-bold btc-price-text">
                             {btcPrice ? `$${btcPrice}` : 'Loading...'}
                         </span>
                     </div>
