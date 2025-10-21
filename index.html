@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BTC Options Trade Journal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              background: 'var(--color-background)',
+              'background-secondary': 'var(--color-background-secondary)',
+              'background-tertiary': 'var(--color-background-tertiary)',
+              'background-quaternary': 'var(--color-background-quaternary)',
+              surface: 'var(--color-surface)',
+              'surface-hover': 'var(--color-surface-hover)',
+              border: 'var(--color-border)',
+              'text-primary': 'var(--color-text-primary)',
+              'text-secondary': 'var(--color-text-secondary)',
+              'text-inverted': 'var(--color-text-inverted)',
+              primary: 'var(--color-primary)',
+              secondary: 'var(--color-secondary)',
+              tertiary: 'var(--color-tertiary)',
+              success: 'var(--color-success)',
+              danger: 'var(--color-danger)',
+              shadow: 'var(--color-shadow)',
+              'checkbox-bg': 'var(--color-checkbox-bg)',
+              'checkbox-border': 'var(--color-checkbox-border)',
+              'disabled-bg': 'var(--color-disabled-bg)',
+            }
+          }
+        }
+      }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu+Mono:wght@400;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+      :root {
+        /* Default theme: EyeLock */
+        --color-background: #202225;
+        --color-background-secondary: #2f3136;
+        --color-background-tertiary: #36393f;
+        --color-background-quaternary: #40444b;
+        --color-surface: #36393f;
+        --color-surface-hover: rgba(79, 84, 92, 0.5);
+        --color-border: #40444b;
+        --color-text-primary: #dcddde;
+        --color-text-secondary: #8e9297;
+        --color-text-inverted: #202225;
+        --color-primary: #7289da;
+        --color-secondary: #f0b90b;
+        --color-tertiary: #faa61a;
+        --color-success: #43b581;
+        --color-danger: #f04747;
+        --color-shadow: rgba(0, 0, 0, 0.2);
+        --color-success-glow: rgba(67, 181, 129, 0.4);
+        --color-danger-glow: rgba(240, 71, 71, 0.4);
+        --color-checkbox-bg: #40444b;
+        --color-checkbox-border: #8e9297;
+        --color-disabled-bg: #72767d;
+        --webkit-calendar-picker-indicator-filter: invert(1);
+      }
+      body {
+        font-family: 'Ubuntu Mono', monospace;
+        background-color: var(--color-background);
+        transition: background-color 0.3s ease;
+      }
+      .font-orbitron {
+        font-family: 'Orbitron', sans-serif;
+      }
+      /* Style for the calendar icon in date inputs for dark mode */
+      ::-webkit-calendar-picker-indicator {
+        filter: var(--webkit-calendar-picker-indicator-filter);
+        cursor: pointer;
+        transition: filter 0.3s ease;
+      }
+      /* Hide arrows from number inputs */
+      /* Chrome, Safari, Edge, Opera */
+      input::-webkit-outer-spin-button,
+      input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+      /* Firefox */
+      input[type=number] {
+        -moz-appearance: textfield;
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "date-fns": "https://aistudiocdn.com/date-fns@^4.1.0",
+    "recharts": "https://aistudiocdn.com/recharts@^2.12.7"
+  }
+}
+</script>
+</head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>
