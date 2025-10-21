@@ -41,7 +41,7 @@ const TradesTable: React.FC<TradesTableProps> = ({
     setSelectedTradeId,
     qtyPerLot
 }) => {
-    const tableHeaders = ['', 'Date', 'Contract', 'Type', 'Lot', 'Entry @', 'Exit @', 'Charges', 'P&L', 'Final P&L', 'Remarks'];
+    const tableHeaders = ['', 'Date', 'Contract', 'Type', 'Lot', 'Entry', 'Exit', 'Charges', 'P&L', 'Final P&L', 'Remarks'];
 
     const handleSelectionChange = (id: string) => {
         setSelectedTradeId(prevId => (prevId === id ? null : id));
@@ -78,19 +78,30 @@ const TradesTable: React.FC<TradesTableProps> = ({
                     <span className="hidden sm:inline">Add Trade</span>
                 </button>
             </div>
-            <table className="w-full text-sm text-left text-text-primary">
-                <thead className="text-xs text-text-secondary uppercase bg-surface">
+            <table className="w-full text-base text-left text-text-primary">
+                <thead className="text-base text-text-secondary uppercase bg-surface">
                     <tr>
-                        {tableHeaders.map(header => (
-                            <th key={header} scope="col" className="px-2 sm:px-4 py-2 border-b border-l border-border font-normal">
-                                {header}
-                            </th>
-                        ))}
+                        {tableHeaders.map(header => {
+                            const numericHeaders = ['Lot', 'Entry', 'Exit', 'Charges', 'P&L', 'Final P&L'];
+                            const isNumeric = numericHeaders.includes(header);
+                            const alignmentClass = isNumeric ? 'text-right' : (header === 'Contract' ? 'text-center' : '');
+
+                            return (
+                                <th key={header} scope="col" className={`px-2 sm:px-4 py-2 border-b border-l border-border font-normal ${alignmentClass}`}>
+                                    {header}
+                                </th>
+                            );
+                        })}
                     </tr>
                 </thead>
                 <tbody className="divide-y divide-border">
                     {trades.map((trade) => {
                         const finalPl = trade.pl - trade.charges;
+                        const contractColorClass = trade.contract.toUpperCase().startsWith('C')
+                            ? 'text-[#fc7303]'
+                            : trade.contract.toUpperCase().startsWith('P')
+                            ? 'text-[#fca103]'
+                            : 'text-primary';
                         return (
                             <tr key={trade.id} className={`hover:bg-surface-hover ${selectedTradeId === trade.id ? 'bg-[color-mix(in_srgb,var(--color-primary)_20%,transparent)]' : ''}`}>
                                 <td className="px-2 sm:px-4 py-1.5 border-l border-border text-center">
@@ -102,16 +113,16 @@ const TradesTable: React.FC<TradesTableProps> = ({
                                     />
                                 </td>
                                 <td className="px-2 sm:px-4 py-1.5 border-l border-border">{format(new Date(trade.date), 'dd MMM yy')}</td>
-                                <td className="px-2 sm:px-4 py-1.5 border-l border-border text-primary whitespace-nowrap">{trade.contract}</td>
+                                <td className={`px-2 sm:px-4 py-1.5 border-l border-border ${contractColorClass} whitespace-nowrap text-center`}>{trade.contract}</td>
                                 <td className={`px-2 sm:px-4 py-1.5 border-l border-border font-bold ${trade.type === 'Buy' ? 'text-success' : 'text-danger'}`}>
                                     {trade.type}
                                 </td>
-                                <td className="px-2 sm:px-4 py-1.5 border-l border-border">{trade.lot}</td>
-                                <td className="px-2 sm:px-4 py-1.5 border-l border-border text-secondary">{trade.entry.toFixed(2)}</td>
-                                <td className="px-2 sm:px-4 py-1.5 border-l border-border">{trade.exit.toFixed(2)}</td>
-                                <td className="px-2 sm:px-4 py-1.5 border-l border-border text-danger">{formatCurrency(trade.charges)}</td>
-                                <td className={`px-2 sm:px-4 py-1.5 border-l border-border ${trade.pl >= 0 ? 'text-success' : 'text-danger'}`}>{formatCurrency(trade.pl)}</td>
-                                <td className={`px-2 sm:px-4 py-1.5 border-l border-border font-bold ${finalPl >= 0 ? 'text-success' : 'text-danger'}`}>{formatCurrency(finalPl)}</td>
+                                <td className="px-2 sm:px-4 py-1.5 border-l border-border text-right">{trade.lot}</td>
+                                <td className="px-2 sm:px-4 py-1.5 border-l border-border text-text-primary text-right">{trade.entry.toFixed(2)}</td>
+                                <td className="px-2 sm:px-4 py-1.5 border-l border-border text-text-primary text-right">{trade.exit.toFixed(2)}</td>
+                                <td className="px-2 sm:px-4 py-1.5 border-l border-border text-danger text-right">{formatCurrency(trade.charges)}</td>
+                                <td className={`px-2 sm:px-4 py-1.5 border-l border-border text-right ${trade.pl >= 0 ? 'text-success' : 'text-danger'}`}>{formatCurrency(trade.pl)}</td>
+                                <td className={`px-2 sm:px-4 py-1.5 border-l border-border font-bold text-right ${finalPl >= 0 ? 'text-success' : 'text-danger'}`}>{formatCurrency(finalPl)}</td>
                                 <td className="px-2 sm:px-4 py-1.5 border-l border-border text-text-secondary max-w-[100px] sm:max-w-xs truncate">{trade.remarks}</td>
                             </tr>
                         );

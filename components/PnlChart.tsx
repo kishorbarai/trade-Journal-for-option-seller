@@ -1,5 +1,5 @@
-import React, { useMemo, useState, useEffect } from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import React, { useMemo, useState, useEffect, useRef } from 'react';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Area } from 'recharts';
 import { format } from 'date-fns';
 import type { Trade } from '../types';
 
@@ -29,6 +29,9 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 const PnlChart: React.FC<PnlChartProps> = ({ trades }) => {
     const [dateRange, setDateRange] = useState({ from: '', to: '' });
     const [btcPrice, setBtcPrice] = useState<string | null>(null);
+    const [priceChangeStatus, setPriceChangeStatus] = useState<'up' | 'down' | null>(null);
+    const prevBtcPriceRef = useRef<number | null>(null);
+    const animationTimeoutRef = useRef<number | null>(null);
 
     useEffect(() => {
         const ws = new WebSocket('wss://stream.binance.com:9443/ws/btcusdt@ticker');
@@ -40,10 +43,26 @@ const PnlChart: React.FC<PnlChartProps> = ({ trades }) => {
         ws.onmessage = (event) => {
             try {
                 const data = JSON.parse(event.data);
-                // The last price is in the 'c' property of the message payload
                 if (data && data.c) {
                     const price = parseFloat(data.c);
+
+                    if (prevBtcPriceRef.current !== null) {
+                        if (price > prevBtcPriceRef.current) {
+                            setPriceChangeStatus('up');
+                        } else if (price < prevBtcPriceRef.current) {
+                            setPriceChangeStatus('down');
+                        }
+                    }
+
                     setBtcPrice(price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+                    prevBtcPriceRef.current = price;
+
+                    if (animationTimeoutRef.current) {
+                        clearTimeout(animationTimeoutRef.current);
+                    }
+                    animationTimeoutRef.current = window.setTimeout(() => {
+                        setPriceChangeStatus(null);
+                    }, 1000); // Animation duration is 1s
                 }
             } catch (error) {
                 console.error('Error parsing WebSocket message:', error);
@@ -59,10 +78,12 @@ const PnlChart: React.FC<PnlChartProps> = ({ trades }) => {
             console.log('BTC price WebSocket disconnected');
         };
 
-        // Cleanup: close the WebSocket connection when the component unmounts.
         return () => {
             if (ws.readyState === WebSocket.OPEN) {
                 ws.close();
+            }
+            if (animationTimeoutRef.current) {
+                clearTimeout(animationTimeoutRef.current);
             }
         };
     }, []);
@@ -128,6 +149,12 @@ const PnlChart: React.FC<PnlChartProps> = ({ trades }) => {
         return (
              <ResponsiveContainer width="100%" height="90%">
                 <LineChart data={chartData} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
+                    <defs>
+                        <linearGradient id="pnlGradient" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor={lineColor} stopOpacity={0.4}/>
+                            <stop offset="95%" stopColor={lineColor} stopOpacity={0}/>
+                        </linearGradient>
+                    </defs>
                     <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
                     <XAxis 
                         dataKey="name" 
@@ -142,6 +169,15 @@ const PnlChart: React.FC<PnlChartProps> = ({ trades }) => {
                     />
                     <Tooltip content={<CustomTooltip />} />
                     <Legend wrapperStyle={{ fontSize: 12, paddingTop: '20px', color: axisColor }} />
+                    <Area 
+                        type="monotone" 
+                        dataKey="Cumulative P&L" 
+                        stroke="none" 
+                        fill="url(#pnlGradient)" 
+                        isAnimationActive={true}
+                        animationDuration={1500}
+                        animationEasing="ease-out"
+                    />
                     <Line 
                         type="monotone" 
                         dataKey="Cumulative P&L" 
@@ -149,20 +185,28 @@ const PnlChart: React.FC<PnlChartProps> = ({ trades }) => {
                         strokeWidth={2} 
                         activeDot={{ r: 8 }} 
                         dot={{ r: 4 }}
+                        animationDuration={1500}
+                        animationEasing="ease-out"
                     />
                 </LineChart>
             </ResponsiveContainer>
         )
     }
 
+    const priceAnimationClass = 
+        priceChangeStatus === 'up' ? 'animate-price-up' :
+        priceChangeStatus === 'down' ? 'animate-price-down' : '';
+
     return (
         <div className="bg-background-secondary border border-border p-2 sm:p-4 h-full min-h-[280px] sm:min-h-[300px] flex flex-col rounded-lg shadow-lg shadow-shadow">
              <div className="flex flex-wrap justify-center sm:justify-between items-center mb-4 gap-2 sm:gap-4">
                 <div className="flex items-baseline gap-x-4">
                     <h3 className="text-lg font-bold text-text-secondary">Cumulative P&L</h3>
-                    <span className="text-lg font-bold text-text-primary [text-shadow:0_0_8px_var(--color-text-primary)]">
-                        {btcPrice ? `$${btcPrice}` : 'Loading...'}
-                    </span>
+                    <div className="px-2">
+                        <span className={`text-lg font-bold btc-price-text ${priceAnimationClass}`}>
+                            {btcPrice ? `$${btcPrice}` : 'Loading...'}
+                        </span>
+                    </div>
                 </div>
                 <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-sm">
                     <div className="flex items-center gap-2">

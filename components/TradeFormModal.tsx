@@ -35,7 +35,6 @@ const initialFormData: FormState = {
 
 const TradeFormModal: React.FC<TradeFormModalProps> = ({ isOpen, onClose, onSave, trade, qtyPerLot }) => {
     const [formData, setFormData] = useState<FormState>(initialFormData);
-    const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({});
     
     // Refs for focus management
     const dateRef = useRef<HTMLInputElement>(null);
@@ -48,31 +47,6 @@ const TradeFormModal: React.FC<TradeFormModalProps> = ({ isOpen, onClose, onSave
     const plRef = useRef<HTMLInputElement>(null);
     const remarksRef = useRef<HTMLTextAreaElement>(null);
     const saveButtonRef = useRef<HTMLButtonElement>(null);
-
-
-    const validate = (data: FormState): Partial<Record<keyof FormState, string>> => {
-      const newErrors: Partial<Record<keyof FormState, string>> = {};
-      
-      if (!data.date) newErrors.date = 'Date is required.';
-      if (!data.contract) newErrors.contract = 'Contract is required.';
-      else if (!/^[CP]-/i.test(data.contract)) newErrors.contract = 'Contract must start with "C-" or "P-".';
-      
-      const lot = Number(data.lot);
-      if (!data.lot || lot <= 0 || !Number.isInteger(lot)) newErrors.lot = 'Lot must be a positive whole number.';
-
-      const entry = Number(data.entry);
-      if (data.entry === '' || entry < 0) newErrors.entry = 'Entry price cannot be negative.';
-      
-      const exit = Number(data.exit);
-      if (data.exit === '' || exit < 0) newErrors.exit = 'Exit price cannot be negative.';
-
-      const charges = Number(data.charges);
-      if (data.charges === '' || charges < 0) newErrors.charges = 'Charges cannot be negative.';
-      
-      if (data.pl === '' || data.pl === '-') newErrors.pl = 'P&L is required.';
-
-      return newErrors;
-    };
 
     useEffect(() => {
         if (trade) {
@@ -90,16 +64,7 @@ const TradeFormModal: React.FC<TradeFormModalProps> = ({ isOpen, onClose, onSave
         } else {
              setFormData(initialFormData);
         }
-        setErrors({});
     }, [trade, isOpen]);
-    
-    // Real-time validation
-    useEffect(() => {
-        if(isOpen) {
-            const validationErrors = validate(formData);
-            setErrors(validationErrors);
-        }
-    }, [formData, isOpen]);
     
     const handleKeyDown = (e: React.KeyboardEvent, nextFieldRef: React.RefObject<HTMLElement>) => {
         if (e.key === 'Enter' && !e.shiftKey) {
@@ -135,22 +100,17 @@ const TradeFormModal: React.FC<TradeFormModalProps> = ({ isOpen, onClose, onSave
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        const validationErrors = validate(formData);
-        if (Object.keys(validationErrors).length > 0) {
-            setErrors(validationErrors);
-            return;
-        }
         const tradeToSave: Trade = {
             id: trade ? trade.id : crypto.randomUUID(),
             date: formData.date,
             contract: formData.contract,
             type: formData.type,
             remarks: formData.remarks,
-            lot: Number(formData.lot),
-            entry: Number(formData.entry),
-            exit: Number(formData.exit),
-            charges: Number(formData.charges),
-            pl: Number(formData.pl),
+            lot: Number(formData.lot) || 0,
+            entry: Number(formData.entry) || 0,
+            exit: Number(formData.exit) || 0,
+            charges: Number(formData.charges) || 0,
+            pl: Number(formData.pl) || 0,
         };
         onSave(tradeToSave);
     };
@@ -158,10 +118,8 @@ const TradeFormModal: React.FC<TradeFormModalProps> = ({ isOpen, onClose, onSave
     if (!isOpen) return null;
 
     const finalPl = (Number(formData.pl) || 0) - (Number(formData.charges) || 0);
-    const isFormInvalid = Object.keys(errors).length > 0;
     
-    const getInputClass = (fieldName: keyof FormState) => 
-        `w-full bg-background-quaternary border rounded-md px-2 py-1 focus:outline-none focus:ring-1 focus:ring-primary transition-colors ${errors[fieldName] ? 'border-danger' : 'border-border'}`;
+    const inputClass = `w-full bg-background-quaternary border rounded-md px-2 py-1 focus:outline-none focus:ring-1 focus:ring-primary transition-colors border-border`;
 
 
     return (
@@ -173,8 +131,7 @@ const TradeFormModal: React.FC<TradeFormModalProps> = ({ isOpen, onClose, onSave
                         
                         <div>
                             <label htmlFor="date" className="text-sm text-text-secondary">Date</label>
-                            <input type="date" id="date" name="date" value={formData.date} onChange={handleChange} className={getInputClass('date')} ref={dateRef} onKeyDown={(e) => handleKeyDown(e, contractRef)} />
-                            {errors.date && <p className="text-xs text-danger mt-1">{errors.date}</p>}
+                            <input type="date" id="date" name="date" value={formData.date} onChange={handleChange} className={inputClass} ref={dateRef} onKeyDown={(e) => handleKeyDown(e, contractRef)} />
                         </div>
 
                         <div className="relative">
@@ -185,18 +142,16 @@ const TradeFormModal: React.FC<TradeFormModalProps> = ({ isOpen, onClose, onSave
                                name="contract" 
                                value={formData.contract} 
                                onChange={handleChange} 
-                               className={getInputClass('contract')} 
+                               className={inputClass} 
                                placeholder="e.g., P-BTC-108000-260925"
                                ref={contractRef} 
                                onKeyDown={(e) => handleKeyDown(e, lotRef)}
                             />
-                            {errors.contract && <p className="text-xs text-danger mt-1">{errors.contract}</p>}
                         </div>
 
                         <div>
                             <label htmlFor="lot" className="text-sm text-text-secondary">Lot</label>
-                            <input type="number" id="lot" name="lot" value={formData.lot} onChange={handleChange} className={getInputClass('lot')} ref={lotRef} onKeyDown={(e) => handleKeyDown(e, buyTypeRef)} />
-                            {errors.lot && <p className="text-xs text-danger mt-1">{errors.lot}</p>}
+                            <input type="number" id="lot" name="lot" value={formData.lot} onChange={handleChange} className={inputClass} ref={lotRef} onKeyDown={(e) => handleKeyDown(e, buyTypeRef)} />
                         </div>
                         
                         <div>
@@ -232,26 +187,22 @@ const TradeFormModal: React.FC<TradeFormModalProps> = ({ isOpen, onClose, onSave
 
                          <div>
                             <label htmlFor="entry" className="text-sm text-text-secondary">Entry Price</label>
-                            <input type="number" step="0.01" id="entry" name="entry" value={formData.entry} onChange={handleChange} className={getInputClass('entry')} ref={entryRef} onKeyDown={(e) => handleKeyDown(e, exitRef)} />
-                             {errors.entry && <p className="text-xs text-danger mt-1">{errors.entry}</p>}
+                            <input type="number" step="0.01" id="entry" name="entry" value={formData.entry} onChange={handleChange} className={inputClass} ref={entryRef} onKeyDown={(e) => handleKeyDown(e, exitRef)} />
                         </div>
 
                          <div>
                             <label htmlFor="exit" className="text-sm text-text-secondary">Exit Price</label>
-                            <input type="number" step="0.01" id="exit" name="exit" value={formData.exit} onChange={handleChange} className={getInputClass('exit')} ref={exitRef} onKeyDown={(e) => handleKeyDown(e, chargesRef)} />
-                            {errors.exit && <p className="text-xs text-danger mt-1">{errors.exit}</p>}
+                            <input type="number" step="0.01" id="exit" name="exit" value={formData.exit} onChange={handleChange} className={inputClass} ref={exitRef} onKeyDown={(e) => handleKeyDown(e, chargesRef)} />
                         </div>
                         
                          <div>
                             <label htmlFor="charges" className="text-sm text-text-secondary">Charges</label>
-                            <input type="number" step="0.01" id="charges" name="charges" value={formData.charges} onChange={handleChange} className={getInputClass('charges')} ref={chargesRef} onKeyDown={(e) => handleKeyDown(e, plRef)} />
-                            {errors.charges && <p className="text-xs text-danger mt-1">{errors.charges}</p>}
+                            <input type="number" step="0.01" id="charges" name="charges" value={formData.charges} onChange={handleChange} className={inputClass} ref={chargesRef} onKeyDown={(e) => handleKeyDown(e, plRef)} />
                         </div>
 
                         <div>
                             <label htmlFor="pl" className="text-sm text-text-secondary">P&L</label>
-                            <input type="number" step="any" id="pl" name="pl" value={formData.pl} onChange={handleChange} className={getInputClass('pl')} ref={plRef} onKeyDown={(e) => handleKeyDown(e, remarksRef)} />
-                            {errors.pl && <p className="text-xs text-danger mt-1">{errors.pl}</p>}
+                            <input type="number" step="any" id="pl" name="pl" value={formData.pl} onChange={handleChange} className={inputClass} ref={plRef} onKeyDown={(e) => handleKeyDown(e, remarksRef)} />
                         </div>
 
                         <div>
@@ -263,12 +214,11 @@ const TradeFormModal: React.FC<TradeFormModalProps> = ({ isOpen, onClose, onSave
 
                         <div className="md:col-span-2">
                             <label htmlFor="remarks" className="text-sm text-text-secondary">Remarks</label>
-                            <textarea id="remarks" name="remarks" value={formData.remarks} onChange={handleChange} rows={3} className={getInputClass('remarks')} ref={remarksRef} onKeyDown={(e) => handleKeyDown(e, saveButtonRef)}></textarea>
-                            {errors.remarks && <p className="text-xs text-danger mt-1">{errors.remarks}</p>}
+                            <textarea id="remarks" name="remarks" value={formData.remarks} onChange={handleChange} rows={3} className={inputClass} ref={remarksRef} onKeyDown={(e) => handleKeyDown(e, saveButtonRef)}></textarea>
                         </div>
                     </div>
                     <div className="mt-6 flex flex-col space-y-2 sm:flex-row-reverse sm:space-y-0 sm:space-x-reverse sm:space-x-3">
-                        <button type="submit" className="bg-primary hover:bg-opacity-80 text-white font-bold py-2 px-4 rounded-md disabled:bg-disabled-bg disabled:cursor-not-allowed w-full sm:w-auto transition-all duration-300" disabled={isFormInvalid} ref={saveButtonRef}>Save Trade</button>
+                        <button type="submit" className="bg-primary hover:bg-opacity-80 text-white font-bold py-2 px-4 rounded-md w-full sm:w-auto transition-all duration-300" ref={saveButtonRef}>Save Trade</button>
                         <button type="button" onClick={onClose} className="bg-border hover:bg-surface-hover text-text-primary font-bold py-2 px-4 rounded-md w-full sm:w-auto transition-all duration-300">Cancel</button>
                     </div>
                 </form>

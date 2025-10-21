@@ -89,6 +89,71 @@
       input[type=number] {
         -moz-appearance: textfield;
       }
+      
+      /* Keyframe Animations */
+      @keyframes glow-pulse-btc {
+        0%, 100% { text-shadow: 0 0 8px #eaa13d, 0 0 2px rgba(234, 161, 61, 0.5); }
+        50% { text-shadow: 0 0 16px #eaa13d, 0 0 24px #ffc96b; }
+      }
+
+      @keyframes glow-pulse-options {
+        0%, 100% { text-shadow: 0 0 8px #3dead7, 0 0 2px rgba(61, 234, 215, 0.5); }
+        50% { text-shadow: 0 0 16px #3dead7, 0 0 24px #8cfff8; }
+      }
+
+      @keyframes pnl-glow {
+        0%, 100% { box-shadow: 0 0 15px var(--glow-color); }
+        50% { box-shadow: 0 0 25px var(--glow-color), 0 0 10px var(--glow-color-accent); }
+      }
+      
+      @keyframes fade-in {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      
+      /* Animation Utility Classes */
+      .animate-glow-btc {
+        animation: glow-pulse-btc 4s ease-in-out infinite;
+      }
+      .animate-glow-options {
+        /* Add a slight delay to desynchronize the pulses */
+        animation: glow-pulse-options 4s ease-in-out infinite 0.3s;
+      }
+      .animate-pnl-glow {
+        animation: pnl-glow 5s ease-in-out infinite;
+      }
+      .header-fade-in {
+        animation: fade-in 0.7s ease-out forwards;
+      }
+
+      /* BTC Price Animation */
+      @keyframes price-up-flash {
+        from { color: var(--color-success); text-shadow: 0 0 10px var(--color-success), 0 0 20px var(--color-success); }
+        to { color: var(--color-secondary); text-shadow: 0 0 5px var(--color-secondary); }
+      }
+      
+      @keyframes price-down-flash {
+        from { color: var(--color-danger); text-shadow: 0 0 10px var(--color-danger), 0 0 20px var(--color-danger); }
+        to { color: var(--color-secondary); text-shadow: 0 0 5px var(--color-secondary); }
+      }
+      
+      @keyframes btc-text-pulse {
+        0%, 100% { text-shadow: 0 0 5px var(--color-secondary); }
+        50% { text-shadow: 0 0 12px var(--color-secondary), 0 0 5px var(--color-secondary); }
+      }
+
+      .btc-price-text {
+        color: var(--color-secondary);
+        animation: btc-text-pulse 4s ease-in-out infinite;
+      }
+      
+      .animate-price-up {
+        animation: price-up-flash 1s ease-out;
+      }
+      
+      .animate-price-down {
+        animation: price-down-flash 1s ease-out;
+      }
     </style>
   <script type="importmap">
 {
